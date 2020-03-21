@@ -1,0 +1,11 @@
+#!/bin/bash
+yum update -y
+amazon-linux-extras install docker
+service docker start
+usermod -a -G docker ec2-user
+mkdir AWS-local
+curl -L "https://github.com/docker/compose/releases/download/1.10.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod a+x /usr/local/bin/docker-compose
+aws s3 cp s3://docker-compose-bucket/docker-compose.yml AWS-local
+cd AWS-local/
+docker-compose up -d
